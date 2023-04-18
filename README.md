@@ -13,7 +13,7 @@ Make the file executable
 
 `chmod +x .git/hooks/prepare-commit-msg`
 
-Copy the contents of (git haiku prepare-commit-msg)[hooks/prepare-commit-msg]
+Copy the contents of the [git haiku prepare-commit-msg](hooks/prepare-commit-msg)
 
 
 
