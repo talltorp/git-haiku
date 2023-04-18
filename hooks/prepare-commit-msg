@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'net/http'
+require 'uri'
+
+def get_commit_message_title
+  commit_message = File.read('.git/COMMIT_EDITMSG')
+  commit_message.split("\n").first
+end
+
+def generate_haiku_from(title)
+  open_ai_token = ENV["HAIKU_OPEN_AI_TOKEN"]
+
+  api_uri = URI('https://api.openai.com/v1/chat/completions')
+  request = Net::HTTP::Post.new(api_uri, {
+    'Content-Type': 'application/json',
+    'Authorization': "Bearer #{open_ai_token}",
+    'OpenAI-Organization': nil
+  })
+
+  request.body = {
+    model: "gpt-3.5-turbo", # 3.5 is fast
+      messages: [{
+        role: "user",
+        content: "
+          turn this commit message into a haiku
+
+          #{title}"
+      }],
+      temperature: 0.7
+  }.to_json
+
+  response = Net::HTTP.start(api_uri.hostname, 443, use_ssl: true) do |http|
+    http.request(request)
+  end
+
+  if response.code.to_i == 200
+    return JSON.parse(response.body).dig("choices", 0, "message", "content")
+  end
+
+  # Print the error
+  pp JSON.parse(response.body)
+
+  nil
+end
+
+# Function to append the result body to the commit description
+def append_result_to_commit_description(title, result)
+  commit_message_file = '.git/COMMIT_EDITMSG'
+  commit_message = File.read(commit_message_file)
+  if title.nil? || title == ""
+    commit_message += "."
+  end
+  commit_message += "\n\nGit Haiku 🌸\n#{result}"
+
+  File.open(commit_message_file, 'w') { |file| file.write(commit_message) }
+end
+
+title = get_commit_message_title
+haiku = generate_haiku_from(title)
+append_result_to_commit_description(title, haiku)
