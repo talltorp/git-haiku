@@ -51,7 +51,7 @@ end
 def append_result_to_commit_description(title, result)
   commit_message_file = '.git/COMMIT_EDITMSG'
   commit_message = File.read(commit_message_file)
-  if levels_io_mode?
+  if levels_io_mode?(title)
     commit_message += "."
   end
   commit_message += "\n\nGit Haiku 🌸\n#{result}"
