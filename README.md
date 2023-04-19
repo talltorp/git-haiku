@@ -1,6 +1,8 @@
 # git-haiku
 Add ancient Japanese poetry to your commits in a `prepare-commit-msg` hook.
 
+Written in the poetic language of Ruby 💎
+
 Created by: [@tobiastalltorp](https://twitter.com/tobiastalltorp)
 
 <img width="960" alt="git haiku overview" src="https://user-images.githubusercontent.com/1172400/232972961-dcf1f610-a8b1-4e8e-998b-b1be8f177fd0.png">
