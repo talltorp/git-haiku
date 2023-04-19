@@ -44,11 +44,14 @@ def generate_haiku_from(title)
   nil
 end
 
-# Function to append the result body to the commit description
+def levels_io_mode?(title)
+  title.nil? || title == ""
+end
+
 def append_result_to_commit_description(title, result)
   commit_message_file = '.git/COMMIT_EDITMSG'
   commit_message = File.read(commit_message_file)
-  if title.nil? || title == ""
+  if levels_io_mode?
     commit_message += "."
   end
   commit_message += "\n\nGit Haiku 🌸\n#{result}"
